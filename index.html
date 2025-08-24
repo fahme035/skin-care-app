@@ -4,256 +4,541 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CeraVe Skincare Routine Builder</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            padding: 20px;
+        }
+        
+        .phone-frame {
+            max-width: 375px;
+            width: 100%;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .phone-header {
+            background: #1a1a1a;
+            padding: 4px;
+            border-radius: 30px 30px 0 0;
+        }
+        
+        .notch {
+            background: black;
+            height: 24px;
+            border-radius: 30px 30px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .notch-line {
+            width: 60px;
+            height: 4px;
+            background: #666;
+            border-radius: 2px;
+        }
+        
+        .status-bar {
+            background: white;
+            padding: 8px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .battery {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .battery-bar {
+            width: 16px;
+            height: 8px;
+            border-radius: 2px;
+        }
+        
+        .battery-full { background: black; }
+        .battery-empty { background: #ddd; }
+        
+        .app-content {
+            padding: 32px 24px;
+            min-height: 500px;
+            text-align: center;
+        }
+        
+        .screen {
+            display: none;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        h1 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #4F9CF9 0%, #8B5CF6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background: #333;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-left: 12px;
+        }
+        
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 32px 0;
+        }
+        
+        .quiz-option {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quiz-option:hover {
+            border-color: #999;
+        }
+        
+        .quiz-option.selected {
+            border-color: #4F9CF9;
+            background: #f0f8ff;
+        }
+        
+        .nav-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .back-btn:hover {
+            color: #333;
+        }
+        
+        .progress {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .routine-item {
+            background: white;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            text-align: left;
+        }
+        
+        .routine-item h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .routine-item p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .routine-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .tag-blue { background: #e0f2fe; color: #0277bd; }
+        .tag-green { background: #e8f5e8; color: #2e7d32; }
+        .tag-yellow { background: #fff8e1; color: #f57c00; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .action-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-save {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+        }
+        
+        .btn-save.saved {
+            background: #4CAF50;
+        }
+        
+        .btn-learn {
+            background: white;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 24px 0;
+            text-align: left;
+        }
+        
+        .info-box h3 {
+            color: #1565c0;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .info-box p {
+            color: #1976d2;
+            font-size: 14px;
+        }
+        
+        .tip-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e5e5e5;
+            margin: 12px 0;
+            text-align: left;
+        }
+        
+        .tip-card h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .tip-card p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .nav-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 24px 0;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+        
+        .dot.active {
+            background: #4F9CF9;
+        }
+        
+        .phone-footer {
+            background: #1a1a1a;
+            padding: 4px;
+            border-radius: 0 0 30px 30px;
+        }
+        
+        .home-bar {
+            background: black;
+            height: 8px;
+            border-radius: 0 0 30px 30px;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="phone-frame">
+        <!-- Phone Header -->
+        <div class="phone-header">
+            <div class="notch">
+                <div class="notch-line"></div>
+            </div>
+        </div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="battery">
+                <div class="battery-bar battery-full"></div>
+                <div class="battery-bar battery-full"></div>
+                <div class="battery-bar battery-empty"></div>
+            </div>
+        </div>
 
-    <script type="text/babel">
-        const { useState } = React;
+        <!-- App Content -->
+        <div class="app-content">
+            <!-- Welcome Screen -->
+            <div class="screen active" id="welcome">
+                <h1>Build Your Skincare Routine</h1>
+                <p class="subtitle">Answer a few quick questions and get a personalized 3-step routine.</p>
+                
+                <div class="logo">Ce</div>
+                
+                <button class="btn-primary" onclick="showScreen('quiz')">Start Quiz</button>
+            </div>
 
-        // Lucide icons as simple SVG components
-        const ChevronLeft = () => (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="15,18 9,12 15,6"></polyline>
-            </svg>
-        );
-
-        const Save = () => (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                <polyline points="17,21 17,13 7,13 7,21"></polyline>
-                <polyline points="7,3 7,8 15,8"></polyline>
-            </svg>
-        );
-
-        const BookOpen = () => (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-            </svg>
-        );
-
-        const SkincareApp = () => {
-            const [currentScreen, setCurrentScreen] = useState('welcome');
-            const [quizData, setQuizData] = useState({
-                skinType: '',
-                concerns: [],
-                experience: ''
-            });
-            const [savedRoutine, setSavedRoutine] = useState(false);
-
-            const screens = {
-                welcome: {
-                    title: "Build Your Skincare Routine",
-                    subtitle: "Answer a few quick questions and get a personalized 3-step routine.",
-                    content: (
-                        <div className="flex flex-col items-center space-y-8">
-                            <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                                <span className="text-white text-4xl font-bold">Ce</span>
-                            </div>
-                            <button 
-                                onClick={() => setCurrentScreen('quiz')}
-                                className="bg-gray-800 text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-700 transition-colors"
-                            >
-                                Start Quiz
-                            </button>
-                        </div>
-                    )
-                },
-                quiz: {
-                    title: "How would you describe your skin type?",
-                    content: (
-                        <div className="space-y-4">
-                            {['Oily', 'Dry', 'Combination', 'Sensitive'].map((type) => (
-                                <button
-                                    key={type}
-                                    onClick={() => {
-                                        setQuizData({...quizData, skinType: type});
-                                        setTimeout(() => setCurrentScreen('results'), 500);
-                                    }}
-                                    className={`w-full p-4 border-2 rounded-lg transition-all ${
-                                        quizData.skinType === type 
-                                            ? 'border-blue-500 bg-blue-50' 
-                                            : 'border-gray-300 hover:border-gray-400'
-                                    }`}
-                                >
-                                    {type}
-                                </button>
-                            ))}
-                            <div className="flex justify-between items-center mt-8">
-                                <button 
-                                    onClick={() => setCurrentScreen('welcome')}
-                                    className="flex items-center text-gray-600 hover:text-gray-800"
-                                >
-                                    <ChevronLeft />
-                                    <span className="ml-1">Back</span>
-                                </button>
-                                <span className="text-sm text-gray-500">1 of 3</span>
-                            </div>
-                        </div>
-                    )
-                },
-                results: {
-                    title: "Your Personalized Routine",
-                    content: (
-                        <div className="space-y-4">
-                            <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
-                                <h3 className="font-semibold text-gray-800 mb-1">Cleanser</h3>
-                                <p className="text-sm text-gray-600 mb-2">Gentle Foaming Cleanser - Removes dirt without irritation</p>
-                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Morning & Evening</span>
-                            </div>
-                            
-                            <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
-                                <h3 className="font-semibold text-gray-800 mb-1">Moisturizer</h3>
-                                <p className="text-sm text-gray-600 mb-2">Moisturizing Cream - Locks in hydration</p>
-                                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Morning & Evening</span>
-                            </div>
-                            
-                            <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
-                                <h3 className="font-semibold text-gray-800 mb-1">Sunscreen</h3>
-                                <p className="text-sm text-gray-600 mb-2">Hydrating SPF 30 - Daily protection</p>
-                                <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Morning Only</span>
-                            </div>
-
-                            <div className="flex space-x-3 mt-6">
-                                <button 
-                                    onClick={() => setSavedRoutine(!savedRoutine)}
-                                    className={`flex-1 flex items-center justify-center py-3 px-4 rounded-lg font-medium transition-all ${
-                                        savedRoutine 
-                                            ? 'bg-green-600 text-white' 
-                                            : 'bg-gray-800 text-white hover:bg-gray-700'
-                                    }`}
-                                >
-                                    <Save />
-                                    <span className="ml-2">{savedRoutine ? 'Saved!' : 'Save Routine'}</span>
-                                </button>
-                                <button 
-                                    onClick={() => setCurrentScreen('learn')}
-                                    className="flex-1 flex items-center justify-center py-3 px-4 border-2 border-gray-800 text-gray-800 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-                                >
-                                    <BookOpen />
-                                    <span className="ml-2">Learn Why</span>
-                                </button>
-                            </div>
-                        </div>
-                    )
-                },
-                learn: {
-                    title: "Why This Routine Works",
-                    content: (
-                        <div className="space-y-6">
-                            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-                                <h3 className="font-semibold text-blue-800 mb-2">For {quizData.skinType || 'Your'} Skin</h3>
-                                <p className="text-sm text-blue-700">
-                                    {quizData.skinType === 'Oily' && "Your routine focuses on gentle cleansing without over-drying, which can actually increase oil production."}
-                                    {quizData.skinType === 'Dry' && "These products provide deep hydration while maintaining your skin's protective barrier."}
-                                    {quizData.skinType === 'Combination' && "This routine balances different areas of your face without over-treating any zone."}
-                                    {quizData.skinType === 'Sensitive' && "All products are fragrance-free and formulated to minimize irritation while being effective."}
-                                    {!quizData.skinType && "This routine provides a gentle foundation that works for most skin types."}
-                                </p>
-                            </div>
-
-                            <div className="space-y-3">
-                                <div className="bg-white p-4 rounded-lg border border-gray-200">
-                                    <h4 className="font-medium text-gray-800">Expect Results In:</h4>
-                                    <p className="text-sm text-gray-600 mt-1">2-4 weeks for hydration, 6-8 weeks for texture improvements</p>
-                                </div>
-                                
-                                <div className="bg-white p-4 rounded-lg border border-gray-200">
-                                    <h4 className="font-medium text-gray-800">Pro Tip:</h4>
-                                    <p className="text-sm text-gray-600 mt-1">Start with this routine for 30 days before adding new products</p>
-                                </div>
-                            </div>
-
-                            <button 
-                                onClick={() => setCurrentScreen('results')}
-                                className="w-full bg-gray-800 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors"
-                            >
-                                Back to My Routine
-                            </button>
-                        </div>
-                    )
-                }
-            };
-
-            const currentScreenData = screens[currentScreen];
-
-            return (
-                <div className="max-w-sm mx-auto bg-white min-h-screen">
-                    {/* Phone Frame */}
-                    <div className="bg-gray-900 p-1 rounded-t-3xl">
-                        <div className="bg-black h-6 rounded-t-3xl flex items-center justify-center">
-                            <div className="w-16 h-1 bg-gray-600 rounded-full"></div>
-                        </div>
-                    </div>
-                    
-                    {/* Status Bar */}
-                    <div className="bg-white px-6 py-2 flex justify-between items-center text-xs font-medium">
-                        <span>9:41</span>
-                        <div className="flex space-x-1">
-                            <div className="w-4 h-2 bg-black rounded-sm"></div>
-                            <div className="w-4 h-2 bg-black rounded-sm"></div>
-                            <div className="w-4 h-2 bg-gray-300 rounded-sm"></div>
-                        </div>
-                    </div>
-
-                    {/* App Content */}
-                    <div className="px-6 py-8 min-h-96">
-                        {/* Header */}
-                        <div className="text-center mb-8">
-                            <h1 className="text-xl font-bold text-gray-800 mb-2">
-                                {currentScreenData.title}
-                            </h1>
-                            {currentScreenData.subtitle && (
-                                <p className="text-sm text-gray-600">
-                                    {currentScreenData.subtitle}
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Content */}
-                        {currentScreenData.content}
-                    </div>
-
-                    {/* Navigation Dots */}
-                    {currentScreen !== 'welcome' && (
-                        <div className="flex justify-center space-x-2 pb-8">
-                            {['quiz', 'results', 'learn'].map((screen, index) => (
-                                <div
-                                    key={screen}
-                                    className={`w-2 h-2 rounded-full ${
-                                        currentScreen === screen ? 'bg-blue-500' : 'bg-gray-300'
-                                    }`}
-                                />
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Bottom Frame */}
-                    <div className="bg-gray-900 p-1 rounded-b-3xl">
-                        <div className="bg-black h-2 rounded-b-3xl"></div>
-                    </div>
+            <!-- Quiz Screen -->
+            <div class="screen" id="quiz">
+                <h1>How would you describe your skin type?</h1>
+                
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="selectSkinType('Oily')">Oily</button>
+                    <button class="quiz-option" onclick="selectSkinType('Dry')">Dry</button>
+                    <button class="quiz-option" onclick="selectSkinType('Combination')">Combination</button>
+                    <button class="quiz-option" onclick="selectSkinType('Sensitive')">Sensitive</button>
                 </div>
-            );
-        };
+                
+                <div class="nav-bottom">
+                    <button class="back-btn" onclick="showScreen('welcome')">← Back</button>
+                    <span class="progress">1 of 3</span>
+                </div>
+            </div>
 
-        ReactDOM.render(<SkincareApp />, document.getElementById('root'));
+            <!-- Results Screen -->
+            <div class="screen" id="results">
+                <h1>Your Personalized Routine</h1>
+                
+                <div class="routine-item">
+                    <h3>Cleanser</h3>
+                    <p>Gentle Foaming Cleanser - Removes dirt without irritation</p>
+                    <span class="routine-tag tag-blue">Morning & Evening</span>
+                </div>
+                
+                <div class="routine-item">
+                    <h3>Moisturizer</h3>
+                    <p>Moisturizing Cream - Locks in hydration</p>
+                    <span class="routine-tag tag-green">Morning & Evening</span>
+                </div>
+                
+                <div class="routine-item">
+                    <h3>Sunscreen</h3>
+                    <p>Hydrating SPF 30 - Daily protection</p>
+                    <span class="routine-tag tag-yellow">Morning Only</span>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-save" id="saveBtn" onclick="toggleSave()">Save Routine</button>
+                    <button class="btn-learn" onclick="showScreen('learn')">Learn Why</button>
+                </div>
+            </div>
+
+            <!-- Learn Screen -->
+            <div class="screen" id="learn">
+                <h1>Why This Routine Works</h1>
+                
+                <div class="info-box">
+                    <h3 id="skinTypeTitle">For Your Skin</h3>
+                    <p id="skinTypeDescription">This routine provides a gentle foundation that works for most skin types.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <h4>Expect Results In:</h4>
+                    <p>2-4 weeks for hydration, 6-8 weeks for texture improvements</p>
+                </div>
+                
+                <div class="tip-card">
+                    <h4>Pro Tip:</h4>
+                    <p>Start with this routine for 30 days before adding new products</p>
+                </div>
+                
+                <button class="btn-primary" onclick="showScreen('results')">Back to My Routine</button>
+            </div>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="nav-dots" id="navDots" style="display: none;">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <!-- Phone Footer -->
+        <div class="phone-footer">
+            <div class="home-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 'welcome';
+        let selectedSkinType = '';
+        let routineSaved = false;
+
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+            
+            // Show/hide nav dots
+            const navDots = document.getElementById('navDots');
+            if (screenId === 'welcome') {
+                navDots.style.display = 'none';
+            } else {
+                navDots.style.display = 'flex';
+                updateNavDots(screenId);
+            }
+        }
+
+        function updateNavDots(screenId) {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            const screenIndex = {
+                'quiz': 0,
+                'results': 1,
+                'learn': 2
+            };
+            
+            if (screenIndex[screenId] !== undefined) {
+                dots[screenIndex[screenId]].classList.add('active');
+            }
+        }
+
+        function selectSkinType(skinType) {
+            selectedSkinType = skinType;
+            
+            // Update visual selection
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // Auto-advance after selection
+            setTimeout(() => {
+                updateLearnContent(skinType);
+                showScreen('results');
+            }, 500);
+        }
+
+        function updateLearnContent(skinType) {
+            const title = document.getElementById('skinTypeTitle');
+            const description = document.getElementById('skinTypeDescription');
+            
+            title.textContent = `For ${skinType} Skin`;
+            
+            const descriptions = {
+                'Oily': "Your routine focuses on gentle cleansing without over-drying, which can actually increase oil production.",
+                'Dry': "These products provide deep hydration while maintaining your skin's protective barrier.",
+                'Combination': "This routine balances different areas of your face without over-treating any zone.",
+                'Sensitive': "All products are fragrance-free and formulated to minimize irritation while being effective."
+            };
+            
+            description.textContent = descriptions[skinType] || "This routine provides a gentle foundation that works for most skin types.";
+        }
+
+        function toggleSave() {
+            routineSaved = !routineSaved;
+            const saveBtn = document.getElementById('saveBtn');
+            
+            if (routineSaved) {
+                saveBtn.textContent = 'Saved!';
+                saveBtn.classList.add('saved');
+            } else {
+                saveBtn.textContent = 'Save Routine';
+                saveBtn.classList.remove('saved');
+            }
+        }
     </script>
 </body>
 </html>
